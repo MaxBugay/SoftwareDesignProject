@@ -23,13 +23,13 @@ public class GeometryWars extends JApplet {
         field.setVisible(true); //Visible Window
         field.setBackground(Color.BLACK);
     }
-    public static class PlayingField extends JPanel implements KeyListener{ 
+    public static class PlayingField extends JPanel { 
         private int xPos, yPos;
         
         PlayingField() {
             setBackground(Color.BLACK);
-            addKeyListener(this);
         }
+        
         public void fieldComponent(Graphics g) {
             //super.fieldComponent(g);
             
@@ -48,20 +48,5 @@ public class GeometryWars extends JApplet {
         public void setY {
             yPos = this.x;
         }*/
-
-        @Override
-        public void keyTyped(KeyEvent ke) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void keyPressed(KeyEvent ke) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void keyReleased(KeyEvent ke) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
     }
 }
