@@ -7,8 +7,8 @@ package geometrywars;
 
 /**
  *
- * @author MaxBu
+ * @author Saif
  */
-public class EnemyUnit {
+public interface EnemyUnit {
     
 }
