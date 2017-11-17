@@ -10,5 +10,20 @@ package geometrywars;
  * @author Saif
  */
 public interface EnemyUnit {
+    int HP = 0;
     
+    /**
+     * Triggers when enemy unit takes a hit from playerUnit
+     */
+    public void onHit();
+    
+    /**
+     * Creation method
+     */
+    public void onCreate();
+    
+    /**
+     * Unit removes from playing field
+     */
+    public void onDeath();
 }
