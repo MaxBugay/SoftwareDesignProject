@@ -21,7 +21,22 @@ public class KeyboardInput implements KeyListener{
 
     @Override
     public void keyPressed(KeyEvent ke) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int keyCode = ke.getKeyCode();
+        switch(keyCode) { 
+            case KeyEvent.VK_UP:
+                // handle up 
+                break;
+            case KeyEvent.VK_DOWN:
+                // handle down 
+                break;
+            case KeyEvent.VK_LEFT:
+                // handle left
+                break;
+            case KeyEvent.VK_RIGHT :
+                // handle right
+                break;
+        }
+        
     }
 
     @Override
