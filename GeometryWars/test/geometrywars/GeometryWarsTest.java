@@ -16,10 +16,12 @@ import static org.junit.Assert.*;
  */
 public class GeometryWarsTest {
     
-    public GeometryWarsTest() {
+    @Test
+    public void GeometryWarsTest() {
+        
     }
     
-    @BeforeClass
+    /*@BeforeClass
     public static void setUpClass() {
     }
     
