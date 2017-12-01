@@ -13,21 +13,21 @@ import static org.junit.Assert.*;
  *
  * @author Saif
  */
-public class TriangleTest {
+public class Enemy1Test {
     
-    Triangle T;
-    public TriangleTest() {
+    Enemy1 T;
+    public Enemy1Test() {
         
     }
     
     @Before
     public void setUp() {
-        T = new Triangle();
+        T = new Enemy1();
         T.onCreate();
     }
 
     /**
-     * Test of onCreate method, of class Triangle.
+     * Test of onCreate method, of class Enemy1.
      */
     @Test
     public void testOnCreate() {
@@ -37,7 +37,7 @@ public class TriangleTest {
     }
 
     /**
-     * Test of onHit method, of class Triangle.
+     * Test of onHit method, of class Enemy1.
      */
     @Test
     public void testOnHit() {
@@ -47,7 +47,7 @@ public class TriangleTest {
     }
 
     /**
-     * Test of onDeath method, of class Triangle.
+     * Test of onDeath method, of class Enemy1.
      */
     @Test
     public void testOnDeath() {

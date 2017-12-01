@@ -9,10 +9,10 @@ package geometrywars;
  *
  * @author Saif
  */
-public class Triangle implements EnemyUnit{
+public class Enemy1 implements EnemyUnit{
 
     private int HP = 0;
-    public Triangle() {
+    public Enemy1() {
         onCreate();
     }
 
