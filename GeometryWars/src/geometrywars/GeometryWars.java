@@ -11,6 +11,7 @@ package geometrywars;
  */
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 import javax.swing.*;
 
 public class GeometryWars extends JApplet {
@@ -72,6 +73,15 @@ public class GeometryWars extends JApplet {
             g.setColor(Color.CYAN);
             g.drawOval(xPos, yPos, SHIP_W, SHIP_W);
             g.fillOval(xPos, yPos, SHIP_W, SHIP_W);
+            int rand1, rand2;
+            for (int i = 0; i < 10; i++) {
+                rand1 = (int)(Math.random() * (1080));
+                rand2 = (int)(Math.random() * (1080));
+                g.setColor(Color.yellow);
+                g.drawOval(rand1, rand2, SHIP_W, SHIP_W);
+                g.fillOval(rand1, rand2, SHIP_W, SHIP_W);
+                
+            }
             
             addKeyBinding();
         }
@@ -175,5 +185,7 @@ public class GeometryWars extends JApplet {
                     PlayingField.createField();
                 }
             });
+            Enemy1 triangle = new Enemy1();
+            
         }
 }
