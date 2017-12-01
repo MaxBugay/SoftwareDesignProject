@@ -14,14 +14,14 @@ import org.junit.Test;
  * @author MaxBu
  */
 public class Enemy2Test {
-    Enemy1 T;
+    Enemy2 T;
     public Enemy2Test() {
         
     }
     
     @Before
     public void setUp() {
-        T = new Enemy1();
+        T = new Enemy2();
         T.onCreate();
     }
 
