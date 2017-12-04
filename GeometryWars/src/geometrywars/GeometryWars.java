@@ -23,7 +23,7 @@ public class GeometryWars extends JApplet {
         int i;
         private int[] enemyX = new int[10];
         private int[] enemyY = new int[10];
-        private static final int PREF_W = 1080, PREF_H = 1080, SHIP_W = 15;;
+        private static final int PREF_W = 1080, PREF_H = 1080, SHIP_W = 40;;
         private Enemy1[] triangle = new Enemy1[10];
         private JMenuBar jmb;
         private JMenu jmMainMenu;
@@ -81,16 +81,18 @@ public class GeometryWars extends JApplet {
             triangleShip = new ImageIcon("TriangleShip.png").getImage();
             pentagonShip = new ImageIcon("PentagonShip.png").getImage();
             octagonShip = new ImageIcon("OctagonShip.png").getImage();
-            g.drawString("Test", 100, 200);
-            g.drawImage(playerShip, SHIP_W, SHIP_W, this);
-            g.setColor(Color.CYAN);
-            g.drawOval(xPos, yPos, SHIP_W, SHIP_W);
-            g.fillOval(xPos, yPos, SHIP_W, SHIP_W);
+            g2.drawString("Test", 100, 200);
+            g2.drawImage(playerShip, xPos, yPos, SHIP_W, SHIP_W, this);
+            g2.drawImage(triangleShip, xPos, yPos, SHIP_W, SHIP_W, this);
+            g2.setColor(Color.CYAN);
+            g2.drawOval(xPos, yPos, SHIP_W, SHIP_W);
+            g2.fillOval(xPos, yPos, SHIP_W, SHIP_W);
             int rand1, rand2;
-            g.setColor(Color.yellow);
+            g2.setColor(Color.yellow);
             for (int j = 0; j < 5; j++) {
                 g.drawOval(enemyX[j], enemyY[j], SHIP_W, SHIP_W);
                     g.fillOval(enemyX[j], enemyY[j], SHIP_W, SHIP_W);
+                    g2.drawImage(triangleShip, xPos, yPos, SHIP_W, SHIP_W, this);
             }
             
             if (secondWave) {
@@ -103,6 +105,7 @@ public class GeometryWars extends JApplet {
             }
             
             addKeyBinding();
+            addKeyBinding2();
         }
         
         private void addKeyBinding() {
@@ -162,17 +165,69 @@ public class GeometryWars extends JApplet {
         }
         enum KeyboardInput {
             
-            W(KeyEvent.VK_W, 0, -5), S(KeyEvent.VK_S, 0, 5), 
-            A(KeyEvent.VK_A, -5, 0), D(KeyEvent.VK_D, 5, 0);
-            
-            //UP(KeyEvent.VK_UP, 0, -5), DOWN(KeyEvent.VK_DOWN, 0, 5), 
-            //LEFT(KeyEvent.VK_LEFT, -5, 0), RIGHT(KeyEvent.VK_RIGHT, 5, 0);
+            W(KeyEvent.VK_W, 0, -10), S(KeyEvent.VK_S, 0, 10), 
+            A(KeyEvent.VK_A, -10, 0), D(KeyEvent.VK_D, 10, 0);
 
             private int keyCode;
             private int xTrans;
             private int yTrans;
 
             private KeyboardInput(int keyCode, int xTrans, int yTrans) {
+                this.keyCode = keyCode;
+                this.xTrans = xTrans;
+                this.yTrans = yTrans;
+            }   
+
+            public int getKeyCode() {
+                return keyCode;
+            }
+
+            public int getxTrans() {
+                return xTrans;
+            }
+
+            public int getyTrans() {
+                return yTrans;
+            }
+        }
+        
+        private void addKeyBinding2() {
+            int condition = WHEN_IN_FOCUSED_WINDOW;
+            InputMap inputMap = getInputMap(condition);
+            ActionMap actionMap = getActionMap();
+
+            for (final KeyboardInput2 dir : KeyboardInput2.values()) {
+                KeyStroke keyStroke = KeyStroke.getKeyStroke(dir.getKeyCode(), 0);
+                inputMap.put(keyStroke, dir.toString());
+                actionMap.put(dir.toString(), new AbstractAction() {
+
+                @Override
+                    public void actionPerformed(ActionEvent evt) {
+                    int newX = xPos + dir.getxTrans();
+                    int newY = yPos + dir.getyTrans();
+                    newX = Math.min(newX, PREF_W - 2 * SHIP_W);
+                    newX = Math.max(newX, SHIP_W);
+                    newY = Math.min(newY, PREF_H - 2 * SHIP_W);
+                    newY = Math.max(newY, SHIP_W);
+                    
+                    xPos = newX;
+                    yPos = newY;
+                   
+                    repaint();
+                    }
+                });
+            }
+        }
+        enum KeyboardInput2 {
+            
+            UP(KeyEvent.VK_UP, 0, -10), DOWN(KeyEvent.VK_DOWN, 0, 10), 
+            LEFT(KeyEvent.VK_LEFT, -10, 0), RIGHT(KeyEvent.VK_RIGHT, 10, 0);
+
+            private int keyCode;
+            private int xTrans;
+            private int yTrans;
+
+            private KeyboardInput2(int keyCode, int xTrans, int yTrans) {
                 this.keyCode = keyCode;
                 this.xTrans = xTrans;
                 this.yTrans = yTrans;
