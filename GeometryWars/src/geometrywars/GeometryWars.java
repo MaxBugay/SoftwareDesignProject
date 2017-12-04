@@ -21,9 +21,10 @@ public class GeometryWars extends JApplet {
     public static class PlayingField extends JPanel implements ActionListener { 
         public int xPos = 540, yPos = 540;
         int i;
+        boolean firingUp = false, firingDown = false, firingLeft = false, firingRight = false;;
         private int[] enemyX = new int[10];
         private int[] enemyY = new int[10];
-        private static final int PREF_W = 1080, PREF_H = 1080, SHIP_W = 40;;
+        private static final int PREF_W = 1080, PREF_H = 1080, SHIP_W = 40, BULLET_W = 20;
         private Enemy1[] triangle = new Enemy1[10];
         private JMenuBar jmb;
         private JMenu jmMainMenu;
@@ -51,6 +52,55 @@ public class GeometryWars extends JApplet {
             jmiExit.addActionListener(this);
             
         }
+
+        public int getxPos() {
+            return xPos;
+        }
+
+        public int getyPos() {
+            return yPos;
+        }
+
+        public void setxPos(int xPos) {
+            this.xPos = xPos;
+        }
+
+        public void setyPos(int yPos) {
+            this.yPos = yPos;
+        }
+
+        public void fireUp() {
+            this.firingUp = true;
+        }
+
+        public void fireDown() {
+            this.firingDown = true;
+        }
+
+        public void fireLeft() {
+            this.firingLeft = true;
+        }
+
+        public void fireRight() {
+            this.firingRight = true;
+        }
+        
+        public void moveRight() {
+            this.xPos = xPos + 10;
+        }
+
+        public void moveUp() {
+            this.yPos = yPos + 10;
+        }
+        
+        public void moveLeft() {
+            this.xPos = xPos - 10;
+        }
+
+        public void moveDown() {
+            this.yPos = yPos - 10;
+        }
+        
         
         public JMenuBar getJMB() {
             return jmb;
@@ -103,7 +153,42 @@ public class GeometryWars extends JApplet {
                 }
                 
             }
-            
+            if (firingUp)
+            {
+                g.setColor(Color.white);
+                for (int i = 0; i < 25; i+=5)
+                {
+                    g.drawOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                    g.fillOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                }
+            }
+            if (firingDown)
+            {
+                g.setColor(Color.white);
+                for (int i = 0; i < 25; i+=5)
+                {
+                    g.drawOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                    g.fillOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                }
+            }
+            if (firingLeft)
+            {
+                g.setColor(Color.white);
+                for (int i = 0; i < 25; i+=5)
+                {
+                    g.drawOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                    g.fillOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                }
+            }
+            if (firingRight)
+            {
+                g.setColor(Color.white);
+                for (int i = 0; i < 25; i+=5)
+                {
+                    g.drawOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                    g.fillOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                }
+            }
             addKeyBinding();
             addKeyBinding2();
         }
@@ -203,17 +288,8 @@ public class GeometryWars extends JApplet {
 
                 @Override
                     public void actionPerformed(ActionEvent evt) {
-                    int newX = xPos + dir.getxTrans();
-                    int newY = yPos + dir.getyTrans();
-                    newX = Math.min(newX, PREF_W - 2 * SHIP_W);
-                    newX = Math.max(newX, SHIP_W);
-                    newY = Math.min(newY, PREF_H - 2 * SHIP_W);
-                    newY = Math.max(newY, SHIP_W);
-                    
-                    xPos = newX;
-                    yPos = newY;
-                   
-                    repaint();
+                        firingLeft = true;
+                        repaint();
                     }
                 });
             }
