@@ -10,5 +10,29 @@ package geometrywars;
  * @author MaxBu
  */
 public class PlayerUnit {
+    /**
+     * Triggers when player unit takes a hit from EnemyUnits
+     */
+    public void onHit() {
+        
+    }
+    /**
+     * Triggers when player unit takes a destroy enemy unit and increases score
+     */
+    public void onKill() {
+        
+    }
+    /**
+     * Creation method
+     */
+    public void onCreate() {
+        
+    }
     
+    /**
+     * Unit removes from playing field
+     */
+    public void onDeath() {
+        
+    }
 }
