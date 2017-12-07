@@ -43,8 +43,8 @@ public class Enemy1 extends JPanel implements EnemyUnit, Runnable {
 
     @Override
     public void onHit() {
-        HP = 0;
-        onDeath();
+        
+        this.onDeath();
     }
 
     @Override
@@ -81,7 +81,7 @@ public class Enemy1 extends JPanel implements EnemyUnit, Runnable {
     
     @Override
     public void onDeath() {
-        
+        this.HP = 0;
     }
 
     public int getHP() {
