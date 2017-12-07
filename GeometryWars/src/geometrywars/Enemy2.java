@@ -11,24 +11,44 @@ package geometrywars;
  */
 public class Enemy2 implements EnemyUnit{
     private int HP = 0;
-    public Enemy2() {
-        onCreate();
+    private int xPosition;
+    private int yPosition;
+    public Enemy2(int xPos, int yPos) {
+        xPosition = xPos;
+        yPosition = yPos;
+        this.onCreate();
     }
 
     @Override
     public void onHit() {
-        HP = 0;
-        onDeath();
+        this.HP = 0;
+        this.onDeath();
     }
 
     @Override
     public void onCreate() {
-        HP = 1;
+        this.HP = 1;
     }
 
     @Override
     public void onDeath() {
         
+    }
+
+    public int getxPosition() {
+        return xPosition;
+    }
+
+    public void setxPosition(int xPosition) {
+        this.xPosition = xPosition;
+    }
+
+    public int getyPosition() {
+        return yPosition;
+    }
+
+    public void setyPosition(int yPosition) {
+        this.yPosition = yPosition;
     }
 
     public int getHP() {
