@@ -19,8 +19,7 @@ import javax.swing.*;
 
 public class GeometryWars extends JApplet {
     public static class PlayingField extends JPanel implements ActionListener { 
-        public int xPos = 540, yPos = 540;
-        int i;
+        public int xPos = 540, yPos = 540, xBullet, yBullet;
         boolean firingUp = false, firingDown = false, firingLeft = false, firingRight = false;;
         private int[] enemyX = new int[10];
         private int[] enemyY = new int[10];
@@ -34,6 +33,10 @@ public class GeometryWars extends JApplet {
         private Font font = new Font("Arial", Font.ITALIC, 30);
         private boolean secondWave = false;
         private boolean setSpawns = true;
+        private int check = 0;
+        private int startShotX = 0, startShotY = 0;
+        private boolean activeBullet = false;
+        private int score = 0;
         PlayingField(){
             jmb = new JMenuBar();
             jmMainMenu = new JMenu("Main Menu");
@@ -111,17 +114,29 @@ public class GeometryWars extends JApplet {
             return new Dimension(PREF_W, PREF_H);
         }
         
+        public void fireRate(boolean isFiring) 
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                repaint();
+            }
+        }
+        
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            this.setBackground(Color.BLUE);
+            this.setBackground(Color.DARK_GRAY);
             if (setSpawns) {
                 for (int x = 0; x < 10; x++) {
                     enemyX[x] = (int)(Math.random() * (1080));
                     enemyY[x] = (int)(Math.random() * (1080));
                 }
                 setSpawns = false;
+                for (int j = 0; j < 10; j++) {
+                    triangle[j] = new Enemy1(enemyX[j], enemyY[j]);
+                }
             }
+            
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -131,18 +146,25 @@ public class GeometryWars extends JApplet {
             triangleShip = new ImageIcon("TriangleShip.png").getImage();
             pentagonShip = new ImageIcon("PentagonShip.png").getImage();
             octagonShip = new ImageIcon("OctagonShip.png").getImage();
-            g2.drawString("Test", 100, 200);
+            //g2.drawString("Test", 100, 200);
             g2.drawImage(playerShip, xPos, yPos, SHIP_W, SHIP_W, this);
             g2.drawImage(triangleShip, xPos, yPos, SHIP_W, SHIP_W, this);
             g2.setColor(Color.CYAN);
             g2.drawOval(xPos, yPos, SHIP_W, SHIP_W);
             g2.fillOval(xPos, yPos, SHIP_W, SHIP_W);
-            int rand1, rand2;
+            String scoreS = Integer.toString(score);
+            g2.drawString(scoreS, 100, 200);
             g2.setColor(Color.yellow);
             for (int j = 0; j < 5; j++) {
-                g.drawOval(enemyX[j], enemyY[j], SHIP_W, SHIP_W);
+                if (triangle[j].getHP() == 1){
+                    g.drawOval(enemyX[j], enemyY[j], SHIP_W, SHIP_W);
                     g.fillOval(enemyX[j], enemyY[j], SHIP_W, SHIP_W);
-                    g2.drawImage(triangleShip, xPos, yPos, SHIP_W, SHIP_W, this);
+                }
+                else {
+                    System.out.println("DEAD");
+                }
+                
+                //g2.drawImage(triangleShip, xPos, yPos, SHIP_W, SHIP_W, this);
             }
             
             if (secondWave) {
@@ -155,20 +177,39 @@ public class GeometryWars extends JApplet {
             }
             if (firingUp)
             {
-                g.setColor(Color.white);
-                for (int i = 0; i < 25; i+=5)
-                {
-                    g.drawOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
-                    g.fillOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                if (check == 0) {
+                    startShotX = xPos;
+                    startShotY = yPos;
+                }
+                xBullet = xPos + 20;
+                yBullet = yPos + 20;
+                if (activeBullet)
+                    g.setColor(Color.GREEN);
+                else 
+                    g.setColor(Color.yellow);
+                //for (int i = 0; i < 25; i+=5)
+                //{
+                    g.drawOval(startShotX,startShotY - check,BULLET_W, BULLET_W);
+                    g.fillOval(startShotX,startShotY - check,BULLET_W, BULLET_W);
+                    
+                //}
+                check += 10;
+                if (check == 100) {
+                    check = 0;
+                    firingUp = false;
+                    startShotX = -500;
+                    startShotY = -500;
+                    
                 }
             }
-            if (firingDown)
+            /*if (firingDown)
             {
-                g.setColor(Color.white);
-                for (int i = 0; i < 25; i+=5)
+                g.setColor(Color.magenta);
+                for (int i = 0; i < 50; i+=10)
                 {
-                    g.drawOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
-                    g.fillOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                    g.drawOval(xBullet,yBullet+i,BULLET_W, BULLET_W);
+                    g.fillOval(xBullet,yBullet+i,BULLET_W, BULLET_W);
+                    repaint();
                 }
             }
             if (firingLeft)
@@ -176,8 +217,8 @@ public class GeometryWars extends JApplet {
                 g.setColor(Color.white);
                 for (int i = 0; i < 25; i+=5)
                 {
-                    g.drawOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
-                    g.fillOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                    g.drawOval(xBullet+i,yBullet,BULLET_W, BULLET_W);
+                    g.fillOval(xBullet+i,yBullet,BULLET_W, BULLET_W);
                 }
             }
             if (firingRight)
@@ -185,10 +226,11 @@ public class GeometryWars extends JApplet {
                 g.setColor(Color.white);
                 for (int i = 0; i < 25; i+=5)
                 {
-                    g.drawOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
-                    g.fillOval(xPos+i,yPos+i,BULLET_W, BULLET_W);
+                    g.drawOval(xBullet-i,yBullet,BULLET_W, BULLET_W);
+                    g.fillOval(xBullet-i,yBullet,BULLET_W, BULLET_W);
                 }
-            }
+                
+            }*/
             addKeyBinding();
             addKeyBinding2();
         }
@@ -211,10 +253,7 @@ public class GeometryWars extends JApplet {
                     newX = Math.max(newX, SHIP_W);
                     newY = Math.min(newY, PREF_H - 2 * SHIP_W);
                     newY = Math.max(newY, SHIP_W);
-                    for (int j = 0; j < 10; j++) {
-                        triangle[j] = new Enemy1(enemyX[j], enemyY[j]);
-                    }
-                    
+                    activeBullet = false;
                     for (int i = 0; i < 10; i++) {
                         if (xPos >= enemyX[i]) {
                             enemyX[i] += 3;
@@ -240,7 +279,7 @@ public class GeometryWars extends JApplet {
                         if (xPos >= enemyX[i] - 3 && xPos <= enemyX[i] + 3) 
                             if (yPos >= enemyY[i] - 3 && yPos <= enemyY[i] + 3) {
                                 System.out.println("you died kid");
-                                secondWave = true;
+                                //secondWave = true;
                             }
                     }
                     repaint();
@@ -288,7 +327,31 @@ public class GeometryWars extends JApplet {
 
                 @Override
                     public void actionPerformed(ActionEvent evt) {
-                        firingLeft = true;
+                        activeBullet = true;
+                        for (int k = 0; k < 5; k++) {
+                        if (startShotX >= enemyX[k] - 50 && startShotX <= enemyX[k] + 50) {
+                            System.out.println("rip this guy");
+                            if (startShotY + check >= enemyY[k] - 100 && startShotY + check <= enemyY[k] + 100) {
+                                triangle[k].onHit();
+                                score += 10;
+                            }
+                        }
+                        }
+                        {
+                            firingDown = true;
+                        }
+                        
+                        {
+                            firingUp = true;
+                        }
+                        
+                        {
+                            firingLeft = true;
+                        }
+                        
+                        {
+                            firingRight = true;
+                        }
                         repaint();
                     }
                 });
