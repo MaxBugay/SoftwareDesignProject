@@ -202,7 +202,7 @@ public class GeometryWars extends JApplet {
                     
                 }
             }
-            /*if (firingDown)
+            if (firingDown)
             {
                 g.setColor(Color.magenta);
                 for (int i = 0; i < 50; i+=10)
@@ -230,7 +230,7 @@ public class GeometryWars extends JApplet {
                     g.fillOval(xBullet-i,yBullet,BULLET_W, BULLET_W);
                 }
                 
-            }*/
+            }
             addKeyBinding();
             addKeyBinding2();
         }
@@ -329,29 +329,30 @@ public class GeometryWars extends JApplet {
                     public void actionPerformed(ActionEvent evt) {
                         activeBullet = true;
                         for (int k = 0; k < 5; k++) {
-                        if (startShotX >= enemyX[k] - 50 && startShotX <= enemyX[k] + 50) {
-                            System.out.println("rip this guy");
-                            if (startShotY + check >= enemyY[k] - 100 && startShotY + check <= enemyY[k] + 100) {
-                                triangle[k].onHit();
-                                score += 10;
+                            if (startShotX >= enemyX[k] - 50 && startShotX <= enemyX[k] + 50) {
+                                System.out.println("rip this guy");
+                                if (startShotY + check >= enemyY[k] - 100 && startShotY + check <= enemyY[k] + 100) {
+                                    triangle[k].onHit();
+                                    score += 10;
+                                }
                             }
                         }
-                        }
-                        {
+                        
+                        int key = dir.getKeyCode();
+
+                        if (key == KeyEvent.VK_DOWN) {
                             firingDown = true;
                         }
-                        
-                        {
+                        if (key == KeyEvent.VK_UP) {
                             firingUp = true;
                         }
-                        
-                        {
+                        if (key == KeyEvent.VK_RIGHT) {
                             firingLeft = true;
                         }
-                        
-                        {
+                        if (key == KeyEvent.VK_LEFT) {
                             firingRight = true;
                         }
+        
                         repaint();
                     }
                 });
