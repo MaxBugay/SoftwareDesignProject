@@ -21,7 +21,7 @@ public class Enemy2Test {
     
     @Before
     public void setUp() {
-        T = new Enemy2();
+        T = new Enemy2(50,50);
         T.onCreate();
     }
 
