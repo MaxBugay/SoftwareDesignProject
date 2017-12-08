@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 public class GeometryWars extends JApplet {
-    public static class PlayingField extends JPanel implements ActionListener { 
+    public static class PlayingField extends JPanel implements ActionListener, Runnable { 
         public int xPos = 540, yPos = 540, xBullet, yBullet;
         boolean firingUp = false, firingDown = false, firingLeft = false, firingRight = false;;
         private int[] enemyX = new int[10];
@@ -142,6 +142,8 @@ public class GeometryWars extends JApplet {
                     if (j < 4)
                         checkShot[j] = 0;
                 }
+                Thread t = new Thread(this);
+                t.start();
             }
             
             Graphics2D g2 = (Graphics2D) g;
@@ -308,6 +310,63 @@ public class GeometryWars extends JApplet {
             addKeyBinding2();
         }
         
+        @Override
+        public void run() {
+                while (1 > 0) {
+                   for (int i = 0; i < 5; i++) {
+                        if (xPos >= enemyX[i]) {
+                            enemyX[i] += 5;
+                            triangle[i].setxPosition(enemyX[i]);
+                        }
+                        else {
+                            enemyX[i] -= 5;
+                            triangle[i].setxPosition(enemyX[i]);
+                        }
+                        if (yPos >= enemyY[i]) {
+                            enemyY[i] += 5;
+                            triangle[i].setyPosition(enemyY[i]);
+                        }
+                        else {
+                            enemyY[i] -= 5;
+                            triangle[i].setyPosition(enemyY[i]);
+                        }
+                       try {
+                           Thread.sleep(15);
+                       } catch (InterruptedException ex) {
+                           Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
+                       }
+                       for (int k = 0; k < 5; k++) {
+                            if (startShotX[0] >= enemyX[k] - 10 && startShotX[0] <= enemyX[k] + 10) {
+                                if (startShotY[0] - checkShot[0] >= enemyY[k] - 10 && startShotY[0] - checkShot[0] <= enemyY[k] + 10) {
+                                    triangle[k].onHit();
+                                    score += 10;
+                                }
+                            }
+                            if (startShotX[1] >= enemyX[k] - 10 && startShotX[1] <= enemyX[k] + 10) {
+                                if (startShotY[1] + checkShot[1] >= enemyY[k] - 10 && startShotY[1] + checkShot[1] <= enemyY[k] + 10) {
+                                    triangle[k].onHit();
+                                    score += 10;
+                                }
+                            }
+                            if (startShotY[2] >= enemyY[k] - 10 && startShotY[2] <= enemyY[k] + 10) {
+                                if (startShotX[2] - checkShot[2] >= enemyX[k] - 10 && startShotX[2] - checkShot[2] <= enemyX[k] + 10) {
+                                    triangle[k].onHit();
+                                    score += 10;
+                                }
+                            }
+                            if (startShotY[3] >= enemyY[k] - 10 && startShotY[3] <= enemyY[k] + 10) {
+                                if (startShotX[3] + checkShot[3] >= enemyX[k] - 10 && startShotX[3] + checkShot[3] <= enemyX[k] + 10) {
+                                    triangle[k].onHit();
+                                    score += 10;
+                                }
+                            }
+                        }
+                        repaint();
+                    }
+                }
+        }
+        
+        
         private void addKeyBinding() {
             int condition = WHEN_IN_FOCUSED_WINDOW;
             InputMap inputMap = getInputMap(condition);
@@ -327,31 +386,15 @@ public class GeometryWars extends JApplet {
                     newY = Math.min(newY, PREF_H - 2 * SHIP_W);
                     newY = Math.max(newY, SHIP_W);
                     activeBullet = false;
-                    for (int i = 0; i < 5; i++) {
-                        if (xPos >= enemyX[i]) {
-                            enemyX[i] += 3;
-                            triangle[i].setxPosition(enemyX[i]);
-                        }
-                        else {
-                            enemyX[i] -= 3;
-                            triangle[i].setxPosition(enemyX[i]);
-                        }
-                        if (yPos >= enemyY[i]) {
-                            enemyY[i] += 3;
-                            triangle[i].setyPosition(enemyY[i]);
-                        }
-                        else {
-                            enemyY[i] -= 3;
-                            triangle[i].setyPosition(enemyY[i]);
-                        }
-                    }
+                    
                     
                     xPos = newX;
                     yPos = newY;
                     for (int i = 0; i < 5; i++) {
-                        if (xPos >= enemyX[i] - 3 && xPos <= enemyX[i] + 3) 
-                            if (yPos >= enemyY[i] - 3 && yPos <= enemyY[i] + 3) {
+                        if (xPos >= enemyX[i] - 10 && xPos <= enemyX[i] + 10) 
+                            if (yPos >= enemyY[i] - 10 & yPos <= enemyY[i] + 10) {
                                 gameOver = true;
+                                System.out.println("meme");
                             }
                     }
                     repaint();
@@ -513,31 +556,8 @@ public class GeometryWars extends JApplet {
             t.start();
             Thread w = new Thread(this);
             w.start();
-        }
-        @Override
-        public void run() {
-            Enemy1 triangle = new Enemy1(enemy1X, enemy1Y);
-                   while (triangle.getHP() > 0) {
-                       if (triangle.getxPosition() > xPos){
-                       enemy1X += 5;
-                       triangle.setxPosition(enemy1X);
-                   }
-                   else {
-                       enemy1X -= 5;
-                       triangle.setxPosition(enemy1X);
-                   }
-                   if (triangle.getyPosition() > yPos) {
-                       enemy1Y += 5;
-                       triangle.setyPosition(enemy1Y);
-                   }
-                   else {
-                       enemy1Y -= 5;
-                       triangle.setyPosition(enemy1Y);
-                   }
-                   repaint();
-                       //System.out.println(this.getxPos());
-                }
         }*/
+        
     }
     
     
