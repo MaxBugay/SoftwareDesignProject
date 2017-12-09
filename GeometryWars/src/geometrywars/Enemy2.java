@@ -36,7 +36,7 @@ public class Enemy2 implements EnemyUnit{
     }
 
     public int getxPosition() {
-        return xPosition;
+        return this.xPosition;
     }
 
     public void setxPosition(int xPosition) {
@@ -44,7 +44,7 @@ public class Enemy2 implements EnemyUnit{
     }
 
     public int getyPosition() {
-        return yPosition;
+        return this.yPosition;
     }
 
     public void setyPosition(int yPosition) {

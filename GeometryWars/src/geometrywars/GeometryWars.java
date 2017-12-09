@@ -132,13 +132,17 @@ public class GeometryWars extends JApplet {
             super.paintComponent(g);
             this.setBackground(Color.DARK_GRAY);
             if (setSpawns) {
-                for (int x = 0; x < 10; x++) {
-                    enemyX[x] = (int)(Math.random() * (1080));
-                    enemyY[x] = (int)(Math.random() * (1080));
+                for (int x = 0; x < 5; x++) {
+                    enemyX[x] = (int)(Math.random() * (-1080));
+                    enemyY[x] = (int)(Math.random() * (-1080));
+                    enemyX[x+5] = (int)(Math.random() * (2000));
+                    enemyY[x+5] = (int)(Math.random() * (2000));
+                    
                 }
                 setSpawns = false;
                 for (int j = 0; j < 5; j++) {
                     triangle[j] = new Enemy1(enemyX[j], enemyY[j]);
+                    square[j] = new Enemy2(enemyX[j+5], enemyY[j+5]);
                     if (j < 4)
                         checkShot[j] = 0;
                 }
@@ -186,20 +190,23 @@ public class GeometryWars extends JApplet {
             if (scoreCheck >= 50) {
                 for (int i = 0; i < 5; i++) {
                     triangle[i].onCreate();
-                    if (scoreCheck >= 200)
-                        square[i].onCreate();
+                    if (scoreCheck >= 70) {
+                            square[i].onCreate();
+                    }
+                }
+                if (scoreCheck >= 70) {
+                            spawn++;
                 }
                 
                 scoreCheck = 0;
-                secondWave = true;
-                spawn++;
             }
             
             if (spawn == 0) {
                 for (int i  = 0; i < 5; i++) {
-                    square[i] = new Enemy2(enemyX[i+5], enemyY[i+5]);
+                    
                     spawn++;
                 }
+                secondWave = true;
                 Thread t2 = new Thread(this);
                 t2.start();
             }
@@ -214,8 +221,8 @@ public class GeometryWars extends JApplet {
                     g.fillOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
                     }
                     else {
-                        square[i].setxPosition((int)(Math.random() * (2160)));
-                        square[i].setyPosition((int)(Math.random() * (2160)));
+                        square[i].setxPosition((int)(Math.random() * (2000)));
+                        square[i].setyPosition((int)(Math.random() * (2000)));
                         enemyX[j] = square[i].getxPosition();
                         enemyY[j] = square[i].getyPosition();
                     }
@@ -530,33 +537,6 @@ public class GeometryWars extends JApplet {
                             if (startShotY[3] >= enemyY[k] - 10 && startShotY[3] <= enemyY[k] + 10) {
                                 if (startShotX[3] + checkShot[3] >= enemyX[k] - 10 && startShotX[3] + checkShot[3] <= enemyX[k] + 10) {
                                     triangle[k].onHit();
-                                    score += 10;
-                                }
-                            }
-                        }
-                        int b =0;
-                        for (int k = 5; k < 10; k++, b++) {
-                            if (startShotX[0] >= enemyX[k] - 10 && startShotX[0] <= enemyX[k] + 10) {
-                                if (startShotY[0] - checkShot[0] >= enemyY[k] - 10 && startShotY[0] - checkShot[0] <= enemyY[k] + 10) {
-                                    square[b].onHit();
-                                    score += 10;
-                                }
-                            }
-                            if (startShotX[1] >= enemyX[k] - 10 && startShotX[1] <= enemyX[k] + 10) {
-                                if (startShotY[1] + checkShot[1] >= enemyY[k] - 10 && startShotY[1] + checkShot[1] <= enemyY[k] + 10) {
-                                    square[b].onHit();
-                                    score += 10;
-                                }
-                            }
-                            if (startShotY[2] >= enemyY[k] - 10 && startShotY[2] <= enemyY[k] + 10) {
-                                if (startShotX[2] - checkShot[2] >= enemyX[k] - 10 && startShotX[2] - checkShot[2] <= enemyX[k] + 10) {
-                                    square[b].onHit();
-                                    score += 10;
-                                }
-                            }
-                            if (startShotY[3] >= enemyY[k] - 10 && startShotY[3] <= enemyY[k] + 10) {
-                                if (startShotX[3] + checkShot[3] >= enemyX[k] - 10 && startShotX[3] + checkShot[3] <= enemyX[k] + 10) {
-                                    square[b].onHit();
                                     score += 10;
                                 }
                             }
