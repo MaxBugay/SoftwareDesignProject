@@ -146,8 +146,12 @@ public class GeometryWars extends JApplet {
                     if (j < 4)
                         checkShot[j] = 0;
                 }
-                Thread t = new Thread(this);
-                t.start();
+                Thread t0 = new Thread(this);
+                t0.setName("collision");
+                t0.start();
+                Thread t1 = new Thread(this);
+                t1.setName("first");
+                t1.start();
             }
             
             Graphics2D g2 = (Graphics2D) g;
@@ -186,20 +190,7 @@ public class GeometryWars extends JApplet {
                 g2.setColor(Color.magenta);
                 g2.drawString("LOL YOU DIED", 500, 500);
             }
-            int scoreCheck = score;
-            if (scoreCheck >= 50) {
-                for (int i = 0; i < 5; i++) {
-                    triangle[i].onCreate();
-                    if (scoreCheck >= 70) {
-                            square[i].onCreate();
-                    }
-                }
-                if (scoreCheck >= 70) {
-                            spawn++;
-                }
-                
-                scoreCheck = 0;
-            }
+            
             
             if (spawn == 0) {
                 for (int i  = 0; i < 5; i++) {
@@ -208,6 +199,7 @@ public class GeometryWars extends JApplet {
                 }
                 secondWave = true;
                 Thread t2 = new Thread(this);
+                t2.setName("second");
                 t2.start();
             }
             
@@ -229,6 +221,22 @@ public class GeometryWars extends JApplet {
                     j++;
                 }
             }
+            
+            int scoreCheck = score;
+            if (scoreCheck >= 50) {
+                for (int i = 0; i < 5; i++) {
+                    triangle[i].onCreate();
+                    if (scoreCheck >= 70) {
+                            square[i].onCreate();
+                    }
+                }
+                if (scoreCheck >= 70) {
+                            spawn++;
+                }
+                
+                scoreCheck = 0;
+            }
+            
             if (firingUp)
             {
                 if (checkShot[0] == 0) {
@@ -326,8 +334,16 @@ public class GeometryWars extends JApplet {
         @Override
         public void run() {
             Thread t = Thread.currentThread();
-            System.out.println(t.getId());
-                while (1 > 0 && t.getId() == 19) {
+            System.out.println(t.getName());
+                while (t.getName().equals("collision") && !(gameOver)){
+                    for (int i = 0; i < 10; i++) {
+                        if (xPos >= enemyX[i] - 10 && xPos <= enemyX[i] + 10) 
+                            if (yPos >= enemyY[i] - 10 & yPos <= enemyY[i] + 10) {
+                                gameOver = true;
+                            }
+                    }
+                }
+                while (t.getName().equals("first")) {
                     int j = 5;
                    for (int i = 0; i < 5; i++) {
                         if (xPos >= enemyX[i]) {
@@ -380,7 +396,7 @@ public class GeometryWars extends JApplet {
                         repaint();
                     }
                 }
-                while (secondWave && t.getId() == 21) {
+                while (t.getName().equals("second")) {
                     int j = 5;
                     for (int i = 0; i < 5; i++) {
                            if (xPos >= enemyX[j]) {
@@ -410,6 +426,7 @@ public class GeometryWars extends JApplet {
                         for (int k = 5; k < 10; k++, b++) {
                             if (startShotX[0] >= enemyX[k] - 10 && startShotX[0] <= enemyX[k] + 10) {
                                 if (startShotY[0] - checkShot[0] >= enemyY[k] - 10 && startShotY[0] - checkShot[0] <= enemyY[k] + 10) {
+                                    System.out.println("b = " + b);
                                     square[b].onHit();
                                     score += 10;
                                 }
@@ -461,13 +478,13 @@ public class GeometryWars extends JApplet {
                     
                     xPos = newX;
                     yPos = newY;
-                    for (int i = 0; i < 5; i++) {
+                    /*for (int i = 0; i < 5; i++) {
                         if (xPos >= enemyX[i] - 10 && xPos <= enemyX[i] + 10) 
                             if (yPos >= enemyY[i] - 10 & yPos <= enemyY[i] + 10) {
                                 gameOver = true;
                                 System.out.println("meme");
                             }
-                    }
+                    }*/
                     repaint();
                     }
                 });
@@ -515,7 +532,7 @@ public class GeometryWars extends JApplet {
                     public void actionPerformed(ActionEvent evt) {
                         activeBullet = true;
 
-                        for (int k = 0; k < 5; k++) {
+                        /*for (int k = 0; k < 5; k++) {
                             if (startShotX[0] >= enemyX[k] - 10 && startShotX[0] <= enemyX[k] + 10) {
                                 if (startShotY[0] - checkShot[0] >= enemyY[k] - 10 && startShotY[0] - checkShot[0] <= enemyY[k] + 10) {
                                     triangle[k].onHit();
@@ -540,7 +557,7 @@ public class GeometryWars extends JApplet {
                                     score += 10;
                                 }
                             }
-                        }
+                        }*/
                     
                         int key = dir.getKeyCode();
 
@@ -634,7 +651,6 @@ public class GeometryWars extends JApplet {
                 public void run() {
                     g.createField();
                 }
-            });
-            //g.enemy();            
+            });   
         }
 }
