@@ -38,7 +38,6 @@ public class GeometryWars extends JApplet {
         private int[] checkShot = new int [4];
         private int[] startShotX = new int[4];
         private int[] startShotY = new int[4];
-        private boolean activeBullet = false;
         private int score = 0, spawn = -1, spawn2 = -1;
         private boolean gameOver = false;
         PlayingField(){
@@ -257,10 +256,7 @@ public class GeometryWars extends JApplet {
                 }
                 xBullet = xPos + 20;
                 yBullet = yPos + 20;
-                if (activeBullet)
                     g.setColor(Color.RED);
-                else 
-                    g.setColor(Color.YELLOW);
                     g.drawOval(startShotX[0],startShotY[0] - checkShot[0],BULLET_W, BULLET_W);
                     g.fillOval(startShotX[0],startShotY[0] - checkShot[0],BULLET_W, BULLET_W);
                 checkShot[0] += 10;
@@ -279,11 +275,7 @@ public class GeometryWars extends JApplet {
                 }
                 xBullet = xPos + 20;
                 yBullet = yPos + 20;
-                if (activeBullet)
                     g.setColor(Color.RED);
-                else 
-                    g.setColor(Color.yellow);
-
                     g.drawOval(startShotX[1],startShotY[1] + checkShot[1],BULLET_W, BULLET_W);
                     g.fillOval(startShotX[1],startShotY[1] + checkShot[1],BULLET_W, BULLET_W);
 
@@ -303,10 +295,7 @@ public class GeometryWars extends JApplet {
                 }
                 xBullet = xPos + 20;
                 yBullet = yPos + 20;
-                if (activeBullet)
                     g.setColor(Color.RED);
-                else 
-                    g.setColor(Color.yellow);
                     g.drawOval(startShotX[2] - checkShot[2],startShotY[2],BULLET_W, BULLET_W);
                     g.fillOval(startShotX[2] - checkShot[2],startShotY[2],BULLET_W, BULLET_W);
                 checkShot[2] += 10;
@@ -325,10 +314,7 @@ public class GeometryWars extends JApplet {
                 }
                 xBullet = xPos + 20;
                 yBullet = yPos + 20;
-                if (activeBullet)
                     g.setColor(Color.RED);
-                else 
-                    g.setColor(Color.yellow);
                     g.drawOval(startShotX[3] + checkShot[3],startShotY[3],BULLET_W, BULLET_W);
                     g.fillOval(startShotX[3] + checkShot[3], startShotY[3],BULLET_W, BULLET_W);
                 checkShot[3] += 10;
@@ -438,7 +424,6 @@ public class GeometryWars extends JApplet {
                         for (int k = 5; k < 10; k++, b++) {
                             if (startShotX[0] >= enemyX[k] - 10 && startShotX[0] <= enemyX[k] + 10) {
                                 if (startShotY[0] - checkShot[0] >= enemyY[k] - 10 && startShotY[0] - checkShot[0] <= enemyY[k] + 10) {
-                                    System.out.println("b = " + b);
                                     square[b].onHit();
                                     score += 10;
                                 }
@@ -559,35 +544,6 @@ public class GeometryWars extends JApplet {
 
                 @Override
                     public void actionPerformed(ActionEvent evt) {
-                        activeBullet = true;
-
-                        /*for (int k = 0; k < 5; k++) {
-                            if (startShotX[0] >= enemyX[k] - 10 && startShotX[0] <= enemyX[k] + 10) {
-                                if (startShotY[0] - checkShot[0] >= enemyY[k] - 10 && startShotY[0] - checkShot[0] <= enemyY[k] + 10) {
-                                    triangle[k].onHit();
-                                    score += 10;
-                                }
-                            }
-                            if (startShotX[1] >= enemyX[k] - 10 && startShotX[1] <= enemyX[k] + 10) {
-                                if (startShotY[1] + checkShot[1] >= enemyY[k] - 10 && startShotY[1] + checkShot[1] <= enemyY[k] + 10) {
-                                    triangle[k].onHit();
-                                    score += 10;
-                                }
-                            }
-                            if (startShotY[2] >= enemyY[k] - 10 && startShotY[2] <= enemyY[k] + 10) {
-                                if (startShotX[2] - checkShot[2] >= enemyX[k] - 10 && startShotX[2] - checkShot[2] <= enemyX[k] + 10) {
-                                    triangle[k].onHit();
-                                    score += 10;
-                                }
-                            }
-                            if (startShotY[3] >= enemyY[k] - 10 && startShotY[3] <= enemyY[k] + 10) {
-                                if (startShotX[3] + checkShot[3] >= enemyX[k] - 10 && startShotX[3] + checkShot[3] <= enemyX[k] + 10) {
-                                    triangle[k].onHit();
-                                    score += 10;
-                                }
-                            }
-                        }*/
-                    
                         int key = dir.getKeyCode();
 
                         if (key == KeyEvent.VK_DOWN) {
@@ -602,7 +558,6 @@ public class GeometryWars extends JApplet {
                         if (key == KeyEvent.VK_LEFT) {
                             firingLeft = true;
                         }
-        
                         repaint();
                     }
                 });

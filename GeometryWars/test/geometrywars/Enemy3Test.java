@@ -21,7 +21,7 @@ public class Enemy3Test {
     
     @Before
     public void setUp() {
-        T = new Enemy3();
+        T = new Enemy3(500, 500);
         T.onCreate();
     }
 
@@ -31,7 +31,7 @@ public class Enemy3Test {
     @Test
     public void testOnCreate() {
         T.onCreate();
-        System.out.println("HP = after creation" + T.getHP() + "\n");
+        System.out.println("HP = after creation: " + T.getHP() + "\n");
         assertTrue(T.getHP() == 1);
     }
 
@@ -42,7 +42,7 @@ public class Enemy3Test {
     public void testOnHit() {
         T.onHit();
         System.out.println("HP after hit = " + T.getHP() + "\n");
-        assertTrue(T.getHP() == 0);
+        assertTrue(T.getHP() == 1);
     }
 
     /**
@@ -52,6 +52,6 @@ public class Enemy3Test {
     public void testOnDeath() {
         T.onHit();
         System.out.println("HP after death = " + T.getHP() + "\n");
-        assertTrue(T.getHP() == 0);
+        assertTrue(T.getHP() == 1);
     }
 }
