@@ -21,7 +21,7 @@ public class Enemy2 implements EnemyUnit{
 
     @Override
     public void onHit() {
-        this.HP = 0;
+        
         this.onDeath();
     }
 
@@ -32,7 +32,7 @@ public class Enemy2 implements EnemyUnit{
 
     @Override
     public void onDeath() {
-        
+        this.HP = 0;
     }
 
     public int getxPosition() {

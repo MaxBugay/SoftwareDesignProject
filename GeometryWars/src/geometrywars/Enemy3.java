@@ -11,13 +11,33 @@ package geometrywars;
  */
 public class Enemy3 implements EnemyUnit{
     private int HP = 0;
-    public Enemy3() {
+    private int xPosition;
+    private int yPosition;
+    public Enemy3(int xPos, int yPos) {
+        xPosition = xPos;
+        yPosition = yPos;
         onCreate();
+    }
+    
+    public int getxPosition() {
+        return this.xPosition;
+    }
+
+    public void setxPosition(int xPosition) {
+        this.xPosition = xPosition;
+    }
+
+    public int getyPosition() {
+        return this.yPosition;
+    }
+
+    public void setyPosition(int yPosition) {
+        this.yPosition = yPosition;
     }
 
     @Override
     public void onHit() {
-        HP = 0;
+        HP = 1;
         onDeath();
     }
 
@@ -28,7 +48,7 @@ public class Enemy3 implements EnemyUnit{
 
     @Override
     public void onDeath() {
-        
+        //Do nothing
     }
 
     public int getHP() {
