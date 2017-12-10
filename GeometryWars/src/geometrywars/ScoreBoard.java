@@ -7,6 +7,7 @@ package geometrywars;
 
 import java.sql.*;
 import java.util.Properties;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,7 +18,7 @@ public class ScoreBoard {
     int score;
     String initials;
     String host = "geometrywars.mysql.database.azure.com";
-    String database = "geometrywars";
+    String database = "highscores";
     String user = "Player@geometrywars";
     String password = "Password1";
     Connection connection = null;
@@ -38,21 +39,18 @@ public class ScoreBoard {
         
         try
         {
-            //String url = String.format("jdbc:mysql://%s/%s", host, database);
-            
-            String url ="jdbc:mysql://geometrywars.mysql.database.azure.com:3306/{your_database}?useSSL=true&requireSSL=false"; 
-            connection = DriverManager.getConnection(url, "Player@geometrywars", "Password1");
+            String url = String.format("jdbc:mysql://%s/%s", host, database);
 
-            /*// Set connection properties.
+            // Set connection properties.
             Properties properties = new Properties();
             properties.setProperty("user", user);
             properties.setProperty("password", password);
-            properties.setProperty("useSSL", "true");
+            properties.setProperty("useSSL", "false");
             properties.setProperty("verifyServerCertificate", "true");
-            properties.setProperty("requireSSL", "false");
+            //properties.setProperty("requireSSL", "false");
 
             // get connection
-            connection = DriverManager.getConnection(url, properties);*/
+            connection = DriverManager.getConnection(url, properties);
         }
         catch (SQLException e)
         {
@@ -61,22 +59,6 @@ public class ScoreBoard {
         if (connection != null) 
         { 
             System.out.println("Successfully created connection to database.");
-
-            // Perform some SQL queries over the connection.
-            try
-            {
-                // Statement
-                Statement statement = connection.createStatement();
-
-                // Create table.
-                statement.execute("CREATE TABLE SCOREBOARD (PLAYER_SCORE PRIMARY KEY, INITIALS CHAR(3));");
-                System.out.println("Created table.");
-
-            }
-            catch (SQLException e)
-            {
-                throw new SQLException("Encountered an error when executing given sql statement.", e);
-            }       
         }
         else {
             System.out.println("Failed to create connection to database.");
@@ -100,28 +82,27 @@ public class ScoreBoard {
         return initials;
     }
     
-    public void insertScoreBoardDB() throws Exception {
+    public void insertScoreBoardDB(String in) throws Exception {
+        this.initials = in;
         connection = null;
         Statement statement = null;    // For the SQL statement
 
         try
         {
-            String url ="jdbc:mysql://geometrywars.mysql.database.azure.com:3306/{your_database}?useSSL=true&requireSSL=false"; 
-            connection = DriverManager.getConnection(url, "Player@geometrywars", "Password1");
             
-            /*// Ensure the SQL Server driver class is available.
+            // Ensure the SQL Server driver class is available.
             String url = String.format("jdbc:mysql://%s/%s", host, database);
 
             // Set connection properties.
             Properties properties = new Properties();
             properties.setProperty("user", user);
             properties.setProperty("password", password);
-            properties.setProperty("useSSL", "true");
+            properties.setProperty("useSSL", "false");
             properties.setProperty("verifyServerCertificate", "true");
-            properties.setProperty("requireSSL", "false");
+            //properties.setProperty("requireSSL", "false");
 
             // get connection
-            connection = DriverManager.getConnection(url, properties); */
+            connection = DriverManager.getConnection(url, properties); 
         }
         catch (SQLException e)
         {
@@ -135,8 +116,8 @@ public class ScoreBoard {
             try
                 {
                 // Define the SQL string.
-                String sqlString = "INSERT INTO SCOREBOARD(PLAYER_NAME, PLAYER_SCORE)" +
-                    "VALUES (" + initials + "," + score + ")";
+                String sqlString = "INSERT INTO SCOREBOARD(PLAYER_INITIALS, PLAYER_SCORE)" +
+                    "VALUES ('" + in + "'," + score  + ")";
 
                 // Use the connection to create the SQL statement.
                 statement = connection.createStatement();
@@ -173,22 +154,19 @@ public class ScoreBoard {
         connection = null;
         // Initialize connection object
         try
-        {
-            String url ="jdbc:mysql://geometrywars.mysql.database.azure.com:3306/{your_database}?useSSL=true&requireSSL=false"; 
-            connection = DriverManager.getConnection(url, "Player@geometrywars", "Password1");
-            
-            /*String url = String.format("jdbc:mysql://%s/%s", host, database);
+        {          
+            String url = String.format("jdbc:mysql://%s/%s", host, database);
 
             // Set connection properties.
             Properties properties = new Properties();
             properties.setProperty("user", user);
             properties.setProperty("password", password);
-            properties.setProperty("useSSL", "true");
+            properties.setProperty("useSSL", "false");
             properties.setProperty("verifyServerCertificate", "true");
-            properties.setProperty("requireSSL", "false");
+            //properties.setProperty("requireSSL", "false");
 
             // get connection
-            connection = DriverManager.getConnection(url, properties);*/
+            connection = DriverManager.getConnection(url, properties);
         }
         catch (SQLException e)
         {
@@ -203,16 +181,28 @@ public class ScoreBoard {
             {
 
                 Statement statement = connection.createStatement();
-                ResultSet results = statement.executeQuery("SELECT TOP 10 PLAYER_SCORE, PLAYER_NAME FROM SCOREBOARD ORDER BY PLAYER_SCORE DESC");
+                ResultSet results = statement.executeQuery("SELECT * FROM SCOREBOARD ORDER BY PLAYER_SCORE DESC;");
+                String outputString = "";
+                String[] outputArr = new String[100];
+                int i = 0;
+                System.out.println("High Scores:");
                 while (results.next())
                 {
-                    String outputString = 
+                    outputString = 
                         String.format(
-                            "Data row = (%s, %s)",
+                            "Name        Score\n%s        %s",
                             results.getString(1),
-                            results.getString(2));
+                            results.getString(2)).toUpperCase();
                     System.out.println(outputString);
+                    outputArr[i++] = outputString;
                 }
+                String highscores = "";
+                for (int j = 0; outputArr[j] != null; j++) {
+                    highscores+="\n";
+                    highscores+=outputArr[j];
+                }
+                JOptionPane.showMessageDialog(null, "High Scores \n" + highscores);
+                System.exit(0);
             }
             catch (SQLException e)
             {
