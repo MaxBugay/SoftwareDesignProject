@@ -32,14 +32,15 @@ public class GeometryWars extends JApplet {
         private JMenuItem jmiStart;
         private JMenuItem jmiHighScore;
         private JMenuItem jmiExit;
-        private Font font = new Font("Arial", Font.ITALIC, 30);
+        private Font gameOverFont = new Font("Impact", Font.BOLD, 60);
+        private Font scoreFont = new Font("Arial", Font.BOLD, 40);
         private boolean secondWave = false, thirdWave = false;
         private boolean setSpawns = true;
         private int[] checkShot = new int [4];
         private int[] startShotX = new int[4];
         private int[] startShotY = new int[4];
         private int score = 0, spawn = -1, spawn2 = -1;
-        private boolean gameOver = false;
+        public boolean gameOver = false;
         PlayingField(){
             jmb = new JMenuBar();
             jmMainMenu = new JMenu("Main Menu");
@@ -157,24 +158,23 @@ public class GeometryWars extends JApplet {
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            g.setFont(font);
+            g2.setFont(scoreFont);
             Image playerShip, triangleShip, pentagonShip, octagonShip;
             playerShip = new ImageIcon("PlayerShip.png").getImage();
             triangleShip = new ImageIcon("TriangleShip.png").getImage();
             pentagonShip = new ImageIcon("PentagonShip.png").getImage();
             octagonShip = new ImageIcon("OctagonShip.png").getImage();
             g2.drawImage(playerShip, xPos, yPos, SHIP_W, SHIP_W, this);
-            g2.drawImage(triangleShip, xPos, yPos, SHIP_W, SHIP_W, this);
             g2.setColor(Color.CYAN);
-            g2.drawOval(xPos - 10, yPos - 10, SHIP_W, SHIP_W);
-            g2.fillOval(xPos - 10, yPos - 10, SHIP_W, SHIP_W);
+            //g2.drawOval(xPos - 10, yPos - 10, SHIP_W, SHIP_W);
+            //g2.fillOval(xPos - 10, yPos - 10, SHIP_W, SHIP_W);
             String scoreS = Integer.toString(score);
-            g2.drawString(scoreS, 100, 200);
+            g2.drawString(scoreS, 40, 80);
             g2.setColor(Color.yellow);
             for (int j = 0; j < 5; j++) {
                 if (triangle[j].getHP() == 1){
-                    g.drawOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
-                    g.fillOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
+                    g.drawImage(triangleShip, enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2, this);
+                    //g.fillOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
                 }
                 else {
                     triangle[j].setxPosition((int)(Math.random() * (-1080)));
@@ -186,10 +186,24 @@ public class GeometryWars extends JApplet {
                 //g2.drawImage(triangleShip, xPos, yPos, SHIP_W, SHIP_W, this);
             }
             if (gameOver) {
-                g2.setColor(Color.magenta);
-                g2.drawString("LOL YOU DIED", 500, 500);
+                String input = JOptionPane.showInputDialog("GAME OVER\nEnter in initials for high score.");
+                String initials = input;
+                int s = score;
+                ScoreBoard sb = null;
+                try {
+                    sb = new ScoreBoard();
+                } catch (Exception ex) {
+                    Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                sb.setInitials(initials);
+                sb.setScore(s);
+                try {
+                    sb.insertScoreBoardDB();
+                } catch (Exception ex) {
+                    Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.exit(0);
             }
-            
             
             if (spawn == 0) {
                 secondWave = true;
@@ -198,14 +212,14 @@ public class GeometryWars extends JApplet {
                 t2.start();
             }
             
-            
             if (secondWave) {
                 g.setColor(Color.GREEN);
                 int j = 5;
                 for (int i = 0; i < 5; i++) {
                     if (square[i].getHP() == 1) {
-                    g.drawOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
-                    g.fillOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
+                        g.drawImage(pentagonShip, enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2, this);
+                        //g.drawOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
+                        //g.fillOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
                     }
                     else {
                         square[i].setxPosition((int)(Math.random() * (2000)));
@@ -227,8 +241,9 @@ public class GeometryWars extends JApplet {
             if (thirdWave) {
                 for (int i = 10; i < 15; i++) {
                     g.setColor(Color.pink);
-                    g.drawOval(enemyX[i], enemyY[i], SHIP_W/2, SHIP_W/2);
-                    g.fillOval(enemyX[i], enemyY[i], SHIP_W/2, SHIP_W/2);
+                    //g.drawOval(enemyX[i], enemyY[i], SHIP_W/2, SHIP_W/2);
+                    g.drawImage(octagonShip, enemyX[i], enemyY[i], SHIP_W/2, SHIP_W/2, this);
+                    //g.fillOval(enemyX[i], enemyY[i], SHIP_W/2, SHIP_W/2);
                 }
             }
             
@@ -341,7 +356,7 @@ public class GeometryWars extends JApplet {
                             }
                     }
                 }
-                while (t.getName().equals("first")) {
+                while (t.getName().equals("first") && !(gameOver)) {
                     int j = 5;
                    for (int i = 0; i < 5; i++) {
                         if (xPos >= enemyX[i]) {
@@ -394,7 +409,7 @@ public class GeometryWars extends JApplet {
                         repaint();
                     }
                 }
-                while (t.getName().equals("second")) {
+                while (t.getName().equals("second") && !(gameOver)) {
                     int j = 5;
                     for (int i = 0; i < 5; i++) {
                            if (xPos >= enemyX[j]) {
@@ -449,7 +464,7 @@ public class GeometryWars extends JApplet {
                         }
                     }
                 }
-                while (t.getName().equals("third")) {
+                while (t.getName().equals("third") && !(gameOver)) {
                     for (int i = 0; i < 5; i++) {
                            if (xPos >= enemyX[i+10]) {
                             enemyX[i+10] += 1;
@@ -607,14 +622,6 @@ public class GeometryWars extends JApplet {
             String comStr = ae.getActionCommand();
             System.out.println(comStr + " Selected");
             switch (comStr) {
-                case "Start Game":
-                    Thread thread = new Thread("Game thread") {
-                        public void run() {
-                            repaint();
-                        }
-                    };
-                    thread.start();
-                    break;
                 case "High Score":
                     break;
                 case "Exit":
@@ -625,16 +632,19 @@ public class GeometryWars extends JApplet {
         }
         
     }
-    
-    
-    
-    public static void main(String[] args) {
-        PlayingField g = new PlayingField();
+
+    public static void main(String[] args) throws Exception {
+        PlayingField pf = new PlayingField();
             SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    g.createField();
+            @Override
+            public void run() {
+                try {
+                    ScoreBoard sb = new ScoreBoard();
+                } catch (Exception ex) {
+                    Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            });   
+                pf.createField();
+            }
+        });   
         }
 }
