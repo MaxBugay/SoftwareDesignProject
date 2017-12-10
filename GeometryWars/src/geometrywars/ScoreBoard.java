@@ -6,6 +6,7 @@
 package geometrywars;
 
 import java.sql.*;
+import java.util.Properties;
 
 /**
  *
@@ -15,12 +16,73 @@ public class ScoreBoard {
     
     int score;
     String initials;
-    String hostName = "geowars.database.windows.net";
-    String dbName = "GeometryWarsScoreBoard";
-    String user = "mabugay";
+    String host = "geometrywars.mysql.database.azure.com";
+    String database = "geometrywars";
+    String user = "Player@geometrywars";
     String password = "Password1";
-    String url = String.format("jdbc:sqlserver://geowars.database.windows.net:1433;database=GeometryWarsScoreBoard;user=mabugay@geowars;password=Password1;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password);
     Connection connection = null;
+    
+    // check that the driver is installed
+        public ScoreBoard() throws Exception {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new ClassNotFoundException("MySQL JDBC driver NOT detected in library path.", e);
+        }
+        System.out.println("MySQL JDBC driver detected in library path.");
+
+        connection = null;
+        
+        try
+        {
+            //String url = String.format("jdbc:mysql://%s/%s", host, database);
+            
+            String url ="jdbc:mysql://geometrywars.mysql.database.azure.com:3306/{your_database}?useSSL=true&requireSSL=false"; 
+            connection = DriverManager.getConnection(url, "Player@geometrywars", "Password1");
+
+            /*// Set connection properties.
+            Properties properties = new Properties();
+            properties.setProperty("user", user);
+            properties.setProperty("password", password);
+            properties.setProperty("useSSL", "true");
+            properties.setProperty("verifyServerCertificate", "true");
+            properties.setProperty("requireSSL", "false");
+
+            // get connection
+            connection = DriverManager.getConnection(url, properties);*/
+        }
+        catch (SQLException e)
+        {
+            throw new SQLException("Failed to create connection to database.", e);
+        }
+        if (connection != null) 
+        { 
+            System.out.println("Successfully created connection to database.");
+
+            // Perform some SQL queries over the connection.
+            try
+            {
+                // Statement
+                Statement statement = connection.createStatement();
+
+                // Create table.
+                statement.execute("CREATE TABLE SCOREBOARD (PLAYER_SCORE PRIMARY KEY, INITIALS CHAR(3));");
+                System.out.println("Created table.");
+
+            }
+            catch (SQLException e)
+            {
+                throw new SQLException("Encountered an error when executing given sql statement.", e);
+            }       
+        }
+        else {
+            System.out.println("Failed to create connection to database.");
+        }
+        System.out.println("Execution finished.");
+    }
     
     public void setScore(int s) {
         score = s;
@@ -38,65 +100,128 @@ public class ScoreBoard {
         return initials;
     }
     
-    public void insertScoreBoardDB() {
+    public void insertScoreBoardDB() throws Exception {
+        connection = null;
         Statement statement = null;    // For the SQL statement
 
         try
         {
-            // Ensure the SQL Server driver class is available.
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-
-            // Establish the connection.
-            connection = DriverManager.getConnection(url);
-
-            // Define the SQL string.
-            String sqlString = "INSERT INTO SCOREBOARD(PLAYER_NAME, PLAYER_SCORE)" +
-                "VALUES (" + initials + "," + score + ")";
-
-            // Use the connection to create the SQL statement.
-            statement = connection.createStatement();
-
-            // Execute the statement.
-            statement.executeUpdate(sqlString);
-
-            // Provide a message when processing is complete.
-            System.out.println("Processing complete.");
+            String url ="jdbc:mysql://geometrywars.mysql.database.azure.com:3306/{your_database}?useSSL=true&requireSSL=false"; 
+            connection = DriverManager.getConnection(url, "Player@geometrywars", "Password1");
             
-        } catch (Exception e) {
-            e.printStackTrace();
-        }   
+            /*// Ensure the SQL Server driver class is available.
+            String url = String.format("jdbc:mysql://%s/%s", host, database);
+
+            // Set connection properties.
+            Properties properties = new Properties();
+            properties.setProperty("user", user);
+            properties.setProperty("password", password);
+            properties.setProperty("useSSL", "true");
+            properties.setProperty("verifyServerCertificate", "true");
+            properties.setProperty("requireSSL", "false");
+
+            // get connection
+            connection = DriverManager.getConnection(url, properties); */
+        }
+        catch (SQLException e)
+        {
+            throw new SQLException("Failed to create connection to database.", e);
+        }
+        if (connection != null) 
+        { 
+            System.out.println("Successfully created connection to database.");
+
+            // Perform some SQL queries over the connection.
+            try
+                {
+                // Define the SQL string.
+                String sqlString = "INSERT INTO SCOREBOARD(PLAYER_NAME, PLAYER_SCORE)" +
+                    "VALUES (" + initials + "," + score + ")";
+
+                // Use the connection to create the SQL statement.
+                statement = connection.createStatement();
+
+                // Execute the statement.
+                statement.executeUpdate(sqlString);
+
+                // Provide a message when processing is complete.
+                System.out.println("Processing complete.");
+            
+            } catch (SQLException e)
+            {
+            throw new SQLException("Encountered an error when executing given sql statement.", e);
+            }
+        }
+        else {
+            System.out.println("Failed to create connection to database.");
+        }
+        System.out.println("Execution finished.");
     } 
     
-    public void selectScoreBoardDB() {
-        try {
-            
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            
-            connection = DriverManager.getConnection(url);
-            String schema = connection.getSchema();
-            System.out.println("Successful connection - Schema: " + schema);
-
-            System.out.println("Query data");
-            System.out.println("=========================================");
-
-            
-            // Create and execute a SELECT SQL statement.
-            String selectSql = "SELECT TOP 10 PLAYER_SCORE, PLAYER_NAME FROM SCOREBOARD ORDER BY PLAYER_SCORE DESC";
-
-            try (Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery(selectSql)) {
-
-                        // Print results from select statement
-                        System.out.println("HIGH SCORES");
-                        while (resultSet.next())
-                        {
-                            System.out.println(resultSet.getString(1) + " "
-                                + resultSet.getString(2));
-                        }
-                 connection.close();
-                }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void selectScoreBoardDB() throws Exception{
+        // check that the driver is installed
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
         }
+        catch (ClassNotFoundException e)
+        {
+            throw new ClassNotFoundException("MySQL JDBC driver NOT detected in library path.", e);
+        }
+        System.out.println("MySQL JDBC driver detected in library path.");
+
+        connection = null;
+        // Initialize connection object
+        try
+        {
+            String url ="jdbc:mysql://geometrywars.mysql.database.azure.com:3306/{your_database}?useSSL=true&requireSSL=false"; 
+            connection = DriverManager.getConnection(url, "Player@geometrywars", "Password1");
+            
+            /*String url = String.format("jdbc:mysql://%s/%s", host, database);
+
+            // Set connection properties.
+            Properties properties = new Properties();
+            properties.setProperty("user", user);
+            properties.setProperty("password", password);
+            properties.setProperty("useSSL", "true");
+            properties.setProperty("verifyServerCertificate", "true");
+            properties.setProperty("requireSSL", "false");
+
+            // get connection
+            connection = DriverManager.getConnection(url, properties);*/
+        }
+        catch (SQLException e)
+        {
+            throw new SQLException("Failed to create connection to database", e);
+        }
+        if (connection != null) 
+        { 
+            System.out.println("Successfully created connection to database.");
+
+            // Perform some SQL queries over the connection.
+            try
+            {
+
+                Statement statement = connection.createStatement();
+                ResultSet results = statement.executeQuery("SELECT TOP 10 PLAYER_SCORE, PLAYER_NAME FROM SCOREBOARD ORDER BY PLAYER_SCORE DESC");
+                while (results.next())
+                {
+                    String outputString = 
+                        String.format(
+                            "Data row = (%s, %s)",
+                            results.getString(1),
+                            results.getString(2));
+                    System.out.println(outputString);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new SQLException("Encountered an error when executing given sql statement", e);
+            }       
+        }
+        else {
+            System.out.println("Failed to create connection to database."); 
+        }
+        System.out.println("Execution finished.");
     }
 }
