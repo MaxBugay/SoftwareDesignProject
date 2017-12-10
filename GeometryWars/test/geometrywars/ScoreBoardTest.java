@@ -28,7 +28,7 @@ public class ScoreBoardTest {
        score = 500;
        sb.setInitials(initials);
        sb.setScore(score);
-       sb.insertScoreBoardDB();
+       sb.insertScoreBoardDB(initials);
        sb.selectScoreBoardDB();
     }
     

@@ -20,6 +20,7 @@ import javax.swing.*;
 public class GeometryWars extends JApplet {
     public static class PlayingField extends JPanel implements ActionListener, Runnable { 
         public int xPos = 540, yPos = 540, xBullet, yBullet;
+        public String initials;
         boolean firingUp = false, firingDown = false, firingLeft = false, firingRight = false;;
         private int[] enemyX = new int[15];
         private int[] enemyY = new int[15];
@@ -130,6 +131,8 @@ public class GeometryWars extends JApplet {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             this.setBackground(Color.DARK_GRAY);
+            Image space = new ImageIcon("space.png").getImage();
+            g.drawImage(space, 1080, 1080, null);
             if (setSpawns) {
                 for (int x = 0; x < 5; x++) {
                     enemyX[x] = (int)(Math.random() * (-1080));
@@ -182,27 +185,19 @@ public class GeometryWars extends JApplet {
                     enemyX[j] = triangle[j].getxPosition();
                     enemyY[j] = triangle[j].getyPosition();
                 }
-                
-                //g2.drawImage(triangleShip, xPos, yPos, SHIP_W, SHIP_W, this);
             }
             if (gameOver) {
                 String input = JOptionPane.showInputDialog("GAME OVER\nEnter in initials for high score.");
-                String initials = input;
-                int s = score;
-                ScoreBoard sb = null;
+                ScoreBoard sb;
                 try {
                     sb = new ScoreBoard();
+                    sb.setScore(score);
+                    sb.insertScoreBoardDB(input);
+                    sb.selectScoreBoardDB();
                 } catch (Exception ex) {
                     Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                sb.setInitials(initials);
-                sb.setScore(s);
-                try {
-                    sb.insertScoreBoardDB();
-                } catch (Exception ex) {
-                    Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                System.exit(0);
+                //System.exit(0);
             }
             
             if (spawn == 0) {
@@ -623,6 +618,14 @@ public class GeometryWars extends JApplet {
             System.out.println(comStr + " Selected");
             switch (comStr) {
                 case "High Score":
+                {
+                try {
+                    ScoreBoard sb = new ScoreBoard();
+                    sb.selectScoreBoardDB();
+                } catch (Exception ex) {
+                    Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
                     break;
                 case "Exit":
                     System.exit(0);
@@ -638,13 +641,8 @@ public class GeometryWars extends JApplet {
             SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                try {
-                    ScoreBoard sb = new ScoreBoard();
-                } catch (Exception ex) {
-                    Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                pf.createField();
+                pf.createField();  
             }
-        });   
-        }
+        });
+    }
 }
