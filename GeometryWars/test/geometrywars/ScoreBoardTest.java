@@ -15,11 +15,15 @@ import static org.junit.Assert.*;
  */
 public class ScoreBoardTest {
     
-    ScoreBoard sb = new ScoreBoard();
+    ScoreBoard sb;
     String initials;
     int score; 
+
+    public ScoreBoardTest() throws Exception {
+        this.sb = new ScoreBoard();
+    }
     
-    protected void setUp(){
+    protected void setUp() throws Exception{
        initials = "MAX";
        score = 500;
        sb.setInitials(initials);
