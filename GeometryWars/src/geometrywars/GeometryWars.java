@@ -44,6 +44,7 @@ public class GeometryWars extends JApplet {
         private int[] startShotY = new int[4];
         private int score = 0, spawn = -1, spawn2 = -1;
         private int lives = 3;
+        private int topScore;
         public boolean gameOver = false;
         PlayingField(){
             jmb = new JMenuBar();
@@ -61,7 +62,6 @@ public class GeometryWars extends JApplet {
             jmiStart.addActionListener(this);
             jmiHighScore.addActionListener(this);
             jmiExit.addActionListener(this);
-            
         }
 
         public int getxPos() {
@@ -122,20 +122,24 @@ public class GeometryWars extends JApplet {
             return new Dimension(PREF_W, PREF_H);
         }
         
-        public void fireRate(boolean isFiring) 
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                repaint();
+        public void topScorePrint() {
+            try {
+                ScoreBoard highestScore = new ScoreBoard();
+                highestScore.selectTopScore();
+                String highest = highestScore.getTop();
+                topScore = Integer.parseInt(highest);
+            } catch (Exception ex) {
+                Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            this.setBackground(Color.DARK_GRAY);
+            this.setBackground(Color.BLACK);
             Image space = new ImageIcon("space.png").getImage();
             if (setSpawns) {
+                topScorePrint();
                 for (int x = 0; x < 5; x++) {
                     enemyX[x] = (int)(Math.random() * (-1080));
                     enemyY[x] = (int)(Math.random() * (-1080));
@@ -160,6 +164,8 @@ public class GeometryWars extends JApplet {
                 t1.start();
             }
             
+            
+            
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -176,7 +182,14 @@ public class GeometryWars extends JApplet {
             String scoreS = Integer.toString(score);
             g2.drawString("Score: " + scoreS, 40, 80);
             g2.drawString("Lives: " + lives, 900, 80);
-            g2.setColor(Color.yellow);
+            if (score < topScore)
+                g2.drawString("High Score: " + topScore, 420, 80);
+            else {
+                g2.drawString("High Score: " + score, 420, 80);
+                secondWave = true;
+                thirdWave = true;
+            }
+            g2.setColor(Color.blue);
             for (int j = 0; j < 5; j++) {
                 if (triangle[j].getHP() == 1){
                     //g.drawImage(triangleShip, enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2, this);
@@ -283,7 +296,7 @@ public class GeometryWars extends JApplet {
                     checkShot[0] = 0;
                     firingUp = false;
                     startShotX[0] = 1080;
-                    startShotY[0] = 1080;
+                    startShotY[0] = 0;
                 }
             }
             if (firingDown)
@@ -303,7 +316,7 @@ public class GeometryWars extends JApplet {
                     checkShot[1] = 0;
                     firingDown = false;
                     startShotX[1] = 1080;
-                    startShotY[1] = 1080;
+                    startShotY[1] = 0;
                 }
             }
             if (firingLeft)
@@ -322,7 +335,7 @@ public class GeometryWars extends JApplet {
                     checkShot[2] = 0;
                     firingLeft = false;
                     startShotX[2] = 1080;
-                    startShotY[2] = 1080;
+                    startShotY[2] = 0;
                 }
             }
             if (firingRight)
@@ -341,7 +354,7 @@ public class GeometryWars extends JApplet {
                     checkShot[3] = 0;
                     firingRight = false;
                     startShotX[3] = 1080;
-                    startShotY[3] = 1080;
+                    startShotY[3] = 0;
                 }
             }
             addKeyBinding();
@@ -633,9 +646,17 @@ public class GeometryWars extends JApplet {
         public void actionPerformed(ActionEvent ae) {
             String comStr = ae.getActionCommand();
             System.out.println(comStr + " Selected");
-            switch (comStr) {
-                case "High Score":
-                {
+            if (comStr.equals("Start Game")) {
+                PlayingField pf = new PlayingField();
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        pf.createField();  
+                    }
+                });
+            }
+            else if (comStr.equals("High Scores")) {
+                    System.out.println("meme");
                 try {
                     ScoreBoard sb = new ScoreBoard();
                     sb.selectScoreBoardDB();
@@ -644,12 +665,8 @@ public class GeometryWars extends JApplet {
                     Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-                    break;
-                case "Exit":
+            else if (comStr.equals("Exit"))
                     System.exit(0);
-                default:
-                    break;
-            }
         }
         
     }

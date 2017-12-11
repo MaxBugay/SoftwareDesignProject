@@ -23,6 +23,9 @@ public class ScoreBoard {
     String password = "Password1";
     Connection connection = null;
     String highscoreboard;
+    String top;
+
+    
     
     // check that the driver is installed
         public ScoreBoard() throws Exception {
@@ -266,15 +269,20 @@ public class ScoreBoard {
                     topScore = (results.getString(2)).toUpperCase();
                     System.out.println(topScore);
                 }
+                this.top = topScore;
             }
             catch (SQLException e)
             {
                 throw new SQLException("Encountered an error when executing given sql statement", e);
             }       
+            
         }
         else {
             System.out.println("Failed to create connection to database."); 
         }
         System.out.println("Execution finished.");
+    }
+    public String getTop() {
+        return this.top;
     }
 }
