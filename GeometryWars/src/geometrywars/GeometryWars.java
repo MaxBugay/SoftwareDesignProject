@@ -173,8 +173,8 @@ public class GeometryWars extends JApplet {
             g2.drawOval(xPos - 10, yPos - 10, SHIP_W, SHIP_W);
             g2.fillOval(xPos - 10, yPos - 10, SHIP_W, SHIP_W);
             String scoreS = Integer.toString(score);
-            g2.drawString(scoreS, 40, 80);
-            g2.drawString("Lives: " + lives, 400, 80);
+            g2.drawString("Score: " + scoreS, 40, 80);
+            g2.drawString("Lives: " + lives, 900, 80);
             g2.setColor(Color.yellow);
             for (int j = 0; j < 5; j++) {
                 if (triangle[j].getHP() == 1){
@@ -278,8 +278,8 @@ public class GeometryWars extends JApplet {
                 if (checkShot[0] == 100) {
                     checkShot[0] = 0;
                     firingUp = false;
-                    startShotX[0] = -50000;
-                    startShotY[0] = -50000;
+                    startShotX[0] = 1080;
+                    startShotY[0] = 1080;
                 }
             }
             if (firingDown)
@@ -298,8 +298,8 @@ public class GeometryWars extends JApplet {
                 if (checkShot[1] == 100) {
                     checkShot[1] = 0;
                     firingDown = false;
-                    startShotX[1] = -50000;
-                    startShotY[1] = -50000;
+                    startShotX[1] = 1080;
+                    startShotY[1] = 1080;
                 }
             }
             if (firingLeft)
@@ -317,8 +317,8 @@ public class GeometryWars extends JApplet {
                 if (checkShot[2] == 100) {
                     checkShot[2] = 0;
                     firingLeft = false;
-                    startShotX[2] = -50000;
-                    startShotY[2] = -50000;
+                    startShotX[2] = 1080;
+                    startShotY[2] = 1080;
                 }
             }
             if (firingRight)
@@ -336,8 +336,8 @@ public class GeometryWars extends JApplet {
                 if (checkShot[3] == 100) {
                     checkShot[3] = 0;
                     firingRight = false;
-                    startShotX[3] = -50000;
-                    startShotY[3] = -50000;
+                    startShotX[3] = 1080;
+                    startShotY[3] = 1080;
                 }
             }
             addKeyBinding();
