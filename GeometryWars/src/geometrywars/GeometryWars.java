@@ -41,6 +41,7 @@ public class GeometryWars extends JApplet {
         private int[] startShotX = new int[4];
         private int[] startShotY = new int[4];
         private int score = 0, spawn = -1, spawn2 = -1;
+        private int lives = 3;
         public boolean gameOver = false;
         PlayingField(){
             jmb = new JMenuBar();
@@ -169,15 +170,16 @@ public class GeometryWars extends JApplet {
             octagonShip = new ImageIcon("OctagonShip.png").getImage();
             g2.drawImage(playerShip, xPos, yPos, SHIP_W, SHIP_W, this);
             g2.setColor(Color.CYAN);
-            //g2.drawOval(xPos - 10, yPos - 10, SHIP_W, SHIP_W);
-            //g2.fillOval(xPos - 10, yPos - 10, SHIP_W, SHIP_W);
+            g2.drawOval(xPos - 10, yPos - 10, SHIP_W, SHIP_W);
+            g2.fillOval(xPos - 10, yPos - 10, SHIP_W, SHIP_W);
             String scoreS = Integer.toString(score);
             g2.drawString(scoreS, 40, 80);
+            g2.drawString("Lives: " + lives, 400, 80);
             g2.setColor(Color.yellow);
             for (int j = 0; j < 5; j++) {
                 if (triangle[j].getHP() == 1){
                     g.drawImage(triangleShip, enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2, this);
-                    //g.fillOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
+                    g.fillOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
                 }
                 else {
                     triangle[j].setxPosition((int)(Math.random() * (-1080)));
@@ -186,6 +188,9 @@ public class GeometryWars extends JApplet {
                     enemyY[j] = triangle[j].getyPosition();
                 }
             }
+            if (lives == 0)
+                gameOver = true;
+            
             if (gameOver) {
                 String input = JOptionPane.showInputDialog("GAME OVER\nEnter in initials for high score.");
                 ScoreBoard sb;
@@ -197,7 +202,7 @@ public class GeometryWars extends JApplet {
                 } catch (Exception ex) {
                     Logger.getLogger(GeometryWars.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                //System.exit(0);
+                System.exit(0);
             }
             
             if (spawn == 0) {
@@ -213,8 +218,8 @@ public class GeometryWars extends JApplet {
                 for (int i = 0; i < 5; i++) {
                     if (square[i].getHP() == 1) {
                         g.drawImage(pentagonShip, enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2, this);
-                        //g.drawOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
-                        //g.fillOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
+                        g.drawOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
+                        g.fillOval(enemyX[j], enemyY[j], SHIP_W/2, SHIP_W/2);
                     }
                     else {
                         square[i].setxPosition((int)(Math.random() * (2000)));
@@ -236,9 +241,9 @@ public class GeometryWars extends JApplet {
             if (thirdWave) {
                 for (int i = 10; i < 15; i++) {
                     g.setColor(Color.pink);
-                    //g.drawOval(enemyX[i], enemyY[i], SHIP_W/2, SHIP_W/2);
+                    g.drawOval(enemyX[i], enemyY[i], SHIP_W/2, SHIP_W/2);
                     g.drawImage(octagonShip, enemyX[i], enemyY[i], SHIP_W/2, SHIP_W/2, this);
-                    //g.fillOval(enemyX[i], enemyY[i], SHIP_W/2, SHIP_W/2);
+                    g.fillOval(enemyX[i], enemyY[i], SHIP_W/2, SHIP_W/2);
                 }
             }
             
@@ -273,8 +278,8 @@ public class GeometryWars extends JApplet {
                 if (checkShot[0] == 100) {
                     checkShot[0] = 0;
                     firingUp = false;
-                    startShotX[0] = -500;
-                    startShotY[0] = -500;
+                    startShotX[0] = -50000;
+                    startShotY[0] = -50000;
                 }
             }
             if (firingDown)
@@ -293,8 +298,8 @@ public class GeometryWars extends JApplet {
                 if (checkShot[1] == 100) {
                     checkShot[1] = 0;
                     firingDown = false;
-                    startShotX[1] = -500;
-                    startShotY[1] = -500;
+                    startShotX[1] = -50000;
+                    startShotY[1] = -50000;
                 }
             }
             if (firingLeft)
@@ -312,8 +317,8 @@ public class GeometryWars extends JApplet {
                 if (checkShot[2] == 100) {
                     checkShot[2] = 0;
                     firingLeft = false;
-                    startShotX[2] = -500;
-                    startShotY[2] = -500;
+                    startShotX[2] = -50000;
+                    startShotY[2] = -50000;
                 }
             }
             if (firingRight)
@@ -331,8 +336,8 @@ public class GeometryWars extends JApplet {
                 if (checkShot[3] == 100) {
                     checkShot[3] = 0;
                     firingRight = false;
-                    startShotX[3] = -500;
-                    startShotY[3] = -500;
+                    startShotX[3] = -50000;
+                    startShotY[3] = -50000;
                 }
             }
             addKeyBinding();
@@ -347,7 +352,15 @@ public class GeometryWars extends JApplet {
                     for (int i = 0; i < 15; i++) {
                         if (xPos >= enemyX[i] - 10 && xPos <= enemyX[i] + 10) 
                             if (yPos >= enemyY[i] - 10 & yPos <= enemyY[i] + 10) {
-                                gameOver = true;
+                                lives--;
+                                for (int x = 0; x < 5; x++) {
+                                    enemyX[x] = (int)(Math.random() * (-1080));
+                                    enemyY[x] = (int)(Math.random() * (-1080));
+                                    enemyX[x+5] = (int)(Math.random() * (2000));
+                                    enemyY[x+5] = (int)(Math.random() * (2000));
+                                    enemyX[x+10] = (int)(Math.random() * (-1080));
+                                    enemyY[x+10] = (int)(Math.random() * (1080));
+                                }
                             }
                     }
                 }
