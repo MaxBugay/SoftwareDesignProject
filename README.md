@@ -10,3 +10,6 @@ Geometry Wars is 2D Bullet Hell Shooter Java App where your objective is to dest
 # To Run
 Pull from this repository to any Java IDE to run. You will need need the MySQL JDBC Driver to communicate with the High Score Board DB.
 Go to the application properties -> libraries -> Add Library -> mySQL JDBC Driver. 
+
+# Deploy App
+[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
