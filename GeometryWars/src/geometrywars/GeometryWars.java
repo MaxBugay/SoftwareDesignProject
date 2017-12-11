@@ -45,6 +45,7 @@ public class GeometryWars extends JApplet {
         private int score = 0, spawn = -1, spawn2 = -1;
         private int lives = 3;
         private int topScore;
+        private PlayerUnit player = new PlayerUnit();
         public boolean gameOver = false;
         PlayingField(){
             jmb = new JMenuBar();
@@ -140,6 +141,7 @@ public class GeometryWars extends JApplet {
             Image space = new ImageIcon("space.png").getImage();
             if (setSpawns) {
                 topScorePrint();
+                player.onCreate();
                 for (int x = 0; x < 5; x++) {
                     enemyX[x] = (int)(Math.random() * (-1080));
                     enemyY[x] = (int)(Math.random() * (-1080));
@@ -203,11 +205,12 @@ public class GeometryWars extends JApplet {
                 }
             }
             if (lives == 0) {
+                g2.setColor(Color.CYAN);
                 g2.drawString("Lives: " + lives, 900, 80);
                 gameOver = true;
             }
             
-            if (gameOver) {
+            if (player.onDeath()) {
                 String input = JOptionPane.showInputDialog("GAME OVER\nEnter in initials for high score.");
                 ScoreBoard sb;
                 try {
@@ -369,7 +372,8 @@ public class GeometryWars extends JApplet {
                     for (int i = 0; i < 15; i++) {
                         if (xPos >= enemyX[i] - 10 && xPos <= enemyX[i] + 10) 
                             if (yPos >= enemyY[i] - 10 & yPos <= enemyY[i] + 10) {
-                                lives--;
+                                player.onHit();
+                                lives = player.getLives();
                                 for (int x = 0; x < 5; x++) {
                                     enemyX[x] = (int)(Math.random() * (-1080));
                                     enemyY[x] = (int)(Math.random() * (-1080));
@@ -409,25 +413,25 @@ public class GeometryWars extends JApplet {
                             if (startShotX[0] >= enemyX[k] - 10 && startShotX[0] <= enemyX[k] + 10) {
                                 if (startShotY[0] - checkShot[0] >= enemyY[k] - 10 && startShotY[0] - checkShot[0] <= enemyY[k] + 10) {
                                     triangle[k].onHit();
-                                    score += 10;
+                                    score += player.onKill();
                                 }
                             }
                             if (startShotX[1] >= enemyX[k] - 10 && startShotX[1] <= enemyX[k] + 10) {
                                 if (startShotY[1] + checkShot[1] >= enemyY[k] - 10 && startShotY[1] + checkShot[1] <= enemyY[k] + 10) {
                                     triangle[k].onHit();
-                                    score += 10;
+                                    score += player.onKill();
                                 }
                             }
                             if (startShotY[2] >= enemyY[k] - 10 && startShotY[2] <= enemyY[k] + 10) {
                                 if (startShotX[2] - checkShot[2] >= enemyX[k] - 10 && startShotX[2] - checkShot[2] <= enemyX[k] + 10) {
                                     triangle[k].onHit();
-                                    score += 10;
+                                    score += player.onKill();
                                 }
                             }
                             if (startShotY[3] >= enemyY[k] - 10 && startShotY[3] <= enemyY[k] + 10) {
                                 if (startShotX[3] + checkShot[3] >= enemyX[k] - 10 && startShotX[3] + checkShot[3] <= enemyX[k] + 10) {
                                     triangle[k].onHit();
-                                    score += 10;
+                                    score += player.onKill();
                                 }
                             }
                         }
@@ -465,25 +469,25 @@ public class GeometryWars extends JApplet {
                             if (startShotX[0] >= enemyX[k] - 10 && startShotX[0] <= enemyX[k] + 10) {
                                 if (startShotY[0] - checkShot[0] >= enemyY[k] - 10 && startShotY[0] - checkShot[0] <= enemyY[k] + 10) {
                                     square[b].onHit();
-                                    score += 10;
+                                    score += player.onKill();
                                 }
                             }
                             if (startShotX[1] >= enemyX[k] - 10 && startShotX[1] <= enemyX[k] + 10) {
                                 if (startShotY[1] + checkShot[1] >= enemyY[k] - 10 && startShotY[1] + checkShot[1] <= enemyY[k] + 10) {
                                     square[b].onHit();
-                                    score += 10;
+                                    score += player.onKill();
                                 }
                             }
                             if (startShotY[2] >= enemyY[k] - 10 && startShotY[2] <= enemyY[k] + 10) {
                                 if (startShotX[2] - checkShot[2] >= enemyX[k] - 10 && startShotX[2] - checkShot[2] <= enemyX[k] + 10) {
                                     square[b].onHit();
-                                    score += 10;
+                                    score += player.onKill();
                                 }
                             }
                             if (startShotY[3] >= enemyY[k] - 10 && startShotY[3] <= enemyY[k] + 10) {
                                 if (startShotX[3] + checkShot[3] >= enemyX[k] - 10 && startShotX[3] + checkShot[3] <= enemyX[k] + 10) {
                                     square[b].onHit();
-                                    score += 10;
+                                    score += player.onKill();
                                 }
                             }
                         }
